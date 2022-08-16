@@ -1,14 +1,20 @@
 const home = document.querySelector('.home');
+const homeButtons = home.querySelectorAll('button');
+const boardHeading = home.querySelector('.board-heading');
+
+const navBoardHeading = document.querySelector('.current-board');
+const navHomeBtn = document.querySelector('.homeBtn');
+
 const game = document.querySelector('.game');
 const dropDown = game.querySelector('.dropDown');
 const image = game.querySelector('img');
+
 const gameBoards = document.querySelector('.game-boards');
 const boards = gameBoards.querySelectorAll('div');
 const scores = document.querySelector('.scores');
-const homeButtons = home.querySelectorAll('button');
 
-
-let currentBoard, target;
+let currentBoard = 'board1';
+let target;
 
 function hideAll(){
     home.style.display = 'none';
@@ -20,7 +26,10 @@ function hideAll(){
 
 function changeGameBoard(e){
     currentBoard = e.target.className;
-    startGame();
+    boardHeading.textContent = 'Game Board '+currentBoard.slice(-1);
+    navBoardHeading.textContent = 'Game Board '+currentBoard.slice(-1);
+    hideAll();
+    home.style.display = 'block';
 }
 
 function startGame(){
@@ -46,10 +55,32 @@ function showDropDown(pos){
     dropDown.style.display = 'block';
 }
 
+function selectBoard(){
+    hideAll();
+    gameBoards.style.display = 'grid';
+}
+
+function showScores(){
+    hideAll();
+    scores.style.display = 'block';
+}
+
+function showHome(){
+    hideAll();
+    home.style.display = 'block';
+}
+
 boards.forEach(board => board.addEventListener('click', changeGameBoard));
 game.addEventListener('click', handleClick);
 
+navHomeBtn.addEventListener('click', showHome);
 
+homeButtons[0].addEventListener('click', startGame);
+homeButtons[1].addEventListener('click', selectBoard);
+homeButtons[2].addEventListener('click', showScores);
+
+hideAll();
+showHome();
 // board1
 //wizard: {x: 133, y:922}
 // odlaw: {x:605 ,y:776}
