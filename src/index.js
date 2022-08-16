@@ -1,3 +1,20 @@
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC9xR5qffKq3ocJTH6HoljgUSQTYffDkKM",
+  authDomain: "where-s-waldo-37a7f.firebaseapp.com",
+  projectId: "where-s-waldo-37a7f",
+  storageBucket: "where-s-waldo-37a7f.appspot.com",
+  messagingSenderId: "614367294900",
+  appId: "1:614367294900:web:0456fc55fa7b052d81aee1"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+//////////////////////////////////////////////////////
+
 const home = document.querySelector('.home');
 const homeButtons = home.querySelectorAll('button');
 const boardHeading = home.querySelector('.board-heading');
@@ -7,6 +24,7 @@ const navHomeBtn = document.querySelector('.homeBtn');
 
 const game = document.querySelector('.game');
 const dropDown = game.querySelector('.dropDown');
+const dropDownDivs = dropDown.querySelectorAll('div');
 const image = game.querySelector('img');
 
 const gameBoards = document.querySelector('.game-boards');
@@ -55,6 +73,18 @@ function showDropDown(pos){
     dropDown.style.display = 'block';
 }
 
+function checkPosition(e){
+    let name = e.target.className;
+    console.log(name);
+    getDocs(collection(db, currentBoard))
+    .then(querySnapshot => {
+        querySnapshot.docs.forEach(doc => {
+            console.log({...doc.data(), id:doc.id});
+        });    
+    })
+
+}
+
 function selectBoard(){
     hideAll();
     gameBoards.style.display = 'grid';
@@ -72,6 +102,8 @@ function showHome(){
 
 boards.forEach(board => board.addEventListener('click', changeGameBoard));
 game.addEventListener('click', handleClick);
+dropDownDivs.forEach(div => div.addEventListener('click', checkPosition));
+
 
 navHomeBtn.addEventListener('click', showHome);
 
