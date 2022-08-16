@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore, collection, getDocs, query, where } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC9xR5qffKq3ocJTH6HoljgUSQTYffDkKM",
@@ -74,13 +74,14 @@ function showDropDown(pos){
 }
 
 function checkPosition(e){
+    dropDown.style.display = 'none';
     let name = e.target.className;
     console.log(name);
-    getDocs(collection(db, currentBoard))
+    getDocs(query(collection(db, currentBoard), where('name', '==', name)))
     .then(querySnapshot => {
         querySnapshot.docs.forEach(doc => {
             console.log({...doc.data(), id:doc.id});
-        });    
+        });
     })
 
 }
