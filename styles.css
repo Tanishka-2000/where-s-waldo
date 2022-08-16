@@ -12,6 +12,9 @@ nav{
     justify-content: space-between;
     align-items: center;
 }
+.material-symbols-outlined{
+    cursor: pointer;
+}
 .home{
     width: 30%;
     padding: 50px;
@@ -38,6 +41,7 @@ nav{
     background-color: rgba(0,0,0,.8);
     color: #C7D36F;
 }
+
 /* game levels */
 .game-boards{
     padding: 100px 50px;
