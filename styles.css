@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
 }
 nav{
     background-color: #C7D36F;
@@ -20,7 +21,7 @@ nav{
     padding: 50px;
     margin: auto;
 }
-.level-heading{
+.board-heading{
     color: #C7D36F;
     font-size: 3rem;
     margin: 60px auto;
