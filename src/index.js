@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDoc, doc, addDoc} from "firebase/firestore";
+import { getFirestore, collection, getDoc, doc, addDoc, getDocs, query, orderBy, limit} from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC9xR5qffKq3ocJTH6HoljgUSQTYffDkKM",
@@ -34,7 +34,7 @@ const form = formDiv.querySelector('form');
 const gameBoards = document.querySelector('.game-boards');
 const boards = gameBoards.querySelectorAll('div');
 const scores = document.querySelector('.scores');
-
+const userList = scores.querySelector('.list');
 
 let currentBoard = 'board1';
 let target;
@@ -166,6 +166,19 @@ function selectBoard(){
 function showScores(){
     hideAll();
     scores.style.display = 'block';
+    getDocs(query(collection(db,'scores'), orderBy('time'), limit(10)))
+    .then(querySnapshot => {
+        let list = [];
+        querySnapshot.docs.forEach(doc => {
+            list.push({...doc.data()});
+        });
+        list.forEach(user => {
+            let h1 = document.createElement('h1');
+            h1.textContent = user.name + user.time;
+            userList.appendChild(h1);
+        });
+
+    })
 }
 
 function showHome(){
