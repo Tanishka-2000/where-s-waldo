@@ -34,7 +34,7 @@ const form = formDiv.querySelector('form');
 const gameBoards = document.querySelector('.game-boards');
 const boards = gameBoards.querySelectorAll('div');
 const scores = document.querySelector('.scores');
-const userList = scores.querySelector('.list');
+// cohst userList = scores.querySelector('.list');
 
 let currentBoard = 'board1';
 let target;
@@ -173,9 +173,17 @@ function showScores(){
             list.push({...doc.data()});
         });
         list.forEach(user => {
+            let div = document.createElement('div');
+
             let h1 = document.createElement('h1');
-            h1.textContent = user.name + user.time;
-            userList.appendChild(h1);
+            h1.textContent = user.name;
+            div.appendChild(h1);
+
+            let h2 = document.createElement('h1');
+            h2.textContent = user.time;
+            div.appendChild(h2);
+
+            scores.appendChild(div);
         });
 
     })

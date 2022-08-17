@@ -105,6 +105,9 @@ nav img{
 }
 .scores>div{
     border: 1px solid #aaa;
+    padding: 50px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 }
 
 /* game */
