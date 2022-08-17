@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDoc, doc} from "firebase/firestore";
+import { getFirestore, collection, getDoc, doc, addDoc} from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC9xR5qffKq3ocJTH6HoljgUSQTYffDkKM",
@@ -28,14 +28,18 @@ const dropDown = game.querySelector('.dropDown');
 const dropDownDivs = dropDown.querySelectorAll('div');
 const image = game.querySelector('img');
 const msgDiv = game.querySelector('.msg');
+const formDiv = game.querySelector('.formDiv');
+const form = formDiv.querySelector('form');
 
 const gameBoards = document.querySelector('.game-boards');
 const boards = gameBoards.querySelectorAll('div');
 const scores = document.querySelector('.scores');
 
+
 let currentBoard = 'board1';
 let target;
 const found = [];
+let start, end;
 
 function hideAll(){
     home.style.display = 'none';
@@ -65,6 +69,7 @@ function startGame(){
     image.setAttribute('src', imgSrc);
     hideAll();
     game.style.display = 'block';
+    start = new Date();
 }
 
 function handleClick(e){
@@ -91,8 +96,6 @@ function checkPosition(e){
     .then(docSnap => {
         let pos = docSnap.data();
         checkPoints(pos, target, name);
-        // console.log(pos);
-        // console.log(target);
     });
 
     e.stopPropagation();
@@ -115,17 +118,44 @@ function success(){
     document.querySelector(`img[alt=${name}]`).style.borderColor = 'green';
     msgDiv.querySelector('h1').textContent =  'Congratulations, you found ' + name;
     msgDiv.style.display = 'block';
+
     setTimeout(function(){
         msgDiv.style.display = 'none';
     },1000);
+
+    if(gameOver()){
+         formDiv.style.display = 'flex';
+     }
 }
 
 function failure(){
     msgDiv.querySelector('h1').textContent = 'Incorrect!';
     msgDiv.style.display = 'block';
+
     setTimeout(function(){
         msgDiv.style.display = 'none';
     },1000);
+}
+
+function gameOver(){
+    end = new Date();
+    let time = (end - start)/1000;
+    form.querySelector('h1').textContent = 'Time taken: ' + time + 's';
+    return ((currentBoard === 'board3' && found.length === 3) || (currentBoard !== 'board3' && found.length === 4));
+}
+
+function saveUser(e){
+    e.preventDefault();
+    let name = form.name.value;
+    let time = (end - start)/1000;
+    // form.querySelector('h1').textContent = 'Time taken: ' + time + 's';
+    addDoc(collection(db,'scores'),{
+        name: name,
+        time: time,
+    }).then(x => {
+        console.log('saved');
+        showHome();
+    }).catch(e => console.log(e.message));
 }
 
 function selectBoard(){
@@ -145,7 +175,7 @@ function showHome(){
 }
 
 boards.forEach(board => board.addEventListener('click', changeGameBoard));
-game.addEventListener('click', handleClick);
+image.addEventListener('click', handleClick);
 dropDownDivs.forEach(div => div.addEventListener('click', checkPosition));
 
 
@@ -154,6 +184,7 @@ navHomeBtn.addEventListener('click', showHome);
 homeButtons[0].addEventListener('click', startGame);
 homeButtons[1].addEventListener('click', selectBoard);
 homeButtons[2].addEventListener('click', showScores);
+form.addEventListener('submit', saveUser);
 
 hideAll();
 showHome();
