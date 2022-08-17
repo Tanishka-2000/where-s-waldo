@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs, query, where } from "firebase/firestore";
+import { getFirestore, collection, getDoc, doc} from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC9xR5qffKq3ocJTH6HoljgUSQTYffDkKM",
@@ -21,11 +21,13 @@ const boardHeading = home.querySelector('.board-heading');
 
 const navBoardHeading = document.querySelector('.current-board');
 const navHomeBtn = document.querySelector('.homeBtn');
+const images = document.querySelectorAll('nav img');
 
 const game = document.querySelector('.game');
 const dropDown = game.querySelector('.dropDown');
 const dropDownDivs = dropDown.querySelectorAll('div');
 const image = game.querySelector('img');
+const msgDiv = game.querySelector('.msg');
 
 const gameBoards = document.querySelector('.game-boards');
 const boards = gameBoards.querySelectorAll('div');
@@ -33,6 +35,7 @@ const scores = document.querySelector('.scores');
 
 let currentBoard = 'board1';
 let target;
+const found = [];
 
 function hideAll(){
     home.style.display = 'none';
@@ -50,6 +53,12 @@ function changeGameBoard(e){
     home.style.display = 'block';
 }
 
+function resetControls(){
+    target = {};
+    found.length = 0;
+    images.forEach(img => img.style.borderColor = 'red');
+}
+
 function startGame(){
 
     let imgSrc = './images/' + currentBoard + '.jpg';
@@ -62,12 +71,12 @@ function handleClick(e){
     let x = e.offsetX;
     let y = e.offsetY;
     showDropDown({x,y});
-    console.log({x,y});
+    target = {x,y};
 }
 
 function showDropDown(pos){
-    let y = pos.y > (image.height - 200) ? image.height - 160 : pos.y + 52;
-    let x = pos.x > (image.width - 200) ? image.width - 250 : pos.x + 20;
+    let y = pos.y > (image.height - 200) ? image.height - 220 : pos.y + 5;
+    let x = pos.x > (image.width - 200) ? image.width - 220 : pos.x + 5;
     dropDown.style.left = x + 'px';
     dropDown.style.top = y + 'px';
     dropDown.style.display = 'block';
@@ -76,14 +85,47 @@ function showDropDown(pos){
 function checkPosition(e){
     dropDown.style.display = 'none';
     let name = e.target.className;
-    console.log(name);
-    getDocs(query(collection(db, currentBoard), where('name', '==', name)))
-    .then(querySnapshot => {
-        querySnapshot.docs.forEach(doc => {
-            console.log({...doc.data(), id:doc.id});
-        });
-    })
+    // console.log(name);
 
+    getDoc(doc(db, currentBoard, name))
+    .then(docSnap => {
+        let pos = docSnap.data();
+        checkPoints(pos, target, name);
+        // console.log(pos);
+        // console.log(target);
+    });
+
+    e.stopPropagation();
+}
+
+function checkPoints(posFromDb, posClicked, name){
+    if ((posClicked.x > posFromDb.x-30) && (posClicked.x < posFromDb.x+30)
+    && (posClicked.y > posFromDb.y-30) && (posClicked.y < posFromDb.y+30)){
+            // console.log(true);
+            found.push(name);
+            success();
+    }else{
+        // console.log(false);
+        failure();
+    }
+}
+
+function success(){
+    let name = found[found.length - 1]
+    document.querySelector(`img[alt=${name}]`).style.borderColor = 'green';
+    msgDiv.querySelector('h1').textContent =  'Congratulations, you found ' + name;
+    msgDiv.style.display = 'block';
+    setTimeout(function(){
+        msgDiv.style.display = 'none';
+    },1000);
+}
+
+function failure(){
+    msgDiv.querySelector('h1').textContent = 'Incorrect!';
+    msgDiv.style.display = 'block';
+    setTimeout(function(){
+        msgDiv.style.display = 'none';
+    },1000);
 }
 
 function selectBoard(){
@@ -98,6 +140,7 @@ function showScores(){
 
 function showHome(){
     hideAll();
+    resetControls();
     home.style.display = 'block';
 }
 
