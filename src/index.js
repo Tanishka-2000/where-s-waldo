@@ -30,6 +30,7 @@ const image = game.querySelector('img');
 const msgDiv = game.querySelector('.msg');
 const formDiv = game.querySelector('.formDiv');
 const form = formDiv.querySelector('form');
+const formBtn = form.querySelectorAll('button');
 
 const gameBoards = document.querySelector('.game-boards');
 const boards = gameBoards.querySelectorAll('div');
@@ -152,6 +153,7 @@ function saveUser(e){
     addDoc(collection(db,'scores'),{
         name: name,
         time: time,
+        board: currentBoard,
     }).then(x => {
         console.log('saved');
         showHome();
@@ -180,7 +182,7 @@ function showScores(){
             div.appendChild(h1);
 
             let h2 = document.createElement('h1');
-            h2.textContent = user.time;
+            h2.textContent = user.time + 's';
             div.appendChild(h2);
 
             scores.appendChild(div);
@@ -199,13 +201,14 @@ boards.forEach(board => board.addEventListener('click', changeGameBoard));
 image.addEventListener('click', handleClick);
 dropDownDivs.forEach(div => div.addEventListener('click', checkPosition));
 
-
 navHomeBtn.addEventListener('click', showHome);
 
 homeButtons[0].addEventListener('click', startGame);
 homeButtons[1].addEventListener('click', selectBoard);
 homeButtons[2].addEventListener('click', showScores);
+
 form.addEventListener('submit', saveUser);
+formBtn[1].addEventListener('click',showHome);
 
 hideAll();
 showHome();
