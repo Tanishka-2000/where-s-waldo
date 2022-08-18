@@ -125,7 +125,10 @@ function success(){
     },1000);
 
     if(gameOver()){
-         formDiv.style.display = 'flex';
+        end = new Date();
+        let time = (end - start)/1000;
+        form.querySelector('h1').textContent = 'Time taken: ' + time + 's';
+        formDiv.style.display = 'flex';
      }
 }
 
@@ -139,9 +142,6 @@ function failure(){
 }
 
 function gameOver(){
-    end = new Date();
-    let time = (end - start)/1000;
-    form.querySelector('h1').textContent = 'Time taken: ' + time + 's';
     return ((currentBoard === 'board3' && found.length === 3) || (currentBoard !== 'board3' && found.length === 4));
 }
 
