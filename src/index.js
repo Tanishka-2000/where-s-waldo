@@ -35,13 +35,14 @@ const formBtn = form.querySelectorAll('button');
 const gameBoards = document.querySelector('.game-boards');
 const boards = gameBoards.querySelectorAll('div');
 const scores = document.querySelector('.scores');
-// cohst userList = scores.querySelector('.list');
+// const userList = scores.querySelector('.list');
 
 let currentBoard = 'board1';
 let target;
 const found = [];
 let start, end;
 
+// hide all screens 
 function hideAll(){
     home.style.display = 'none';
     game.style.display = 'none';
@@ -50,6 +51,7 @@ function hideAll(){
     dropDown.style.display = 'none';
 }
 
+// switch a game board to play on
 function changeGameBoard(e){
     currentBoard = e.target.className;
     boardHeading.textContent = 'Game Board '+currentBoard.slice(-1);
@@ -64,15 +66,16 @@ function resetControls(){
     images.forEach(img => img.style.borderColor = 'red');
 }
 
+// open image to play on
 function startGame(){
-
     let imgSrc = './images/' + currentBoard + '.jpg';
     image.setAttribute('src', imgSrc);
     hideAll();
     game.style.display = 'block';
-    start = new Date();
+    start = new Date();     // time is recorded to compare high scores
 }
 
+// user click on the image
 function handleClick(e){
     let x = e.offsetX;
     let y = e.offsetY;
@@ -80,6 +83,7 @@ function handleClick(e){
     target = {x,y};
 }
 
+// show a list to user to select the found character
 function showDropDown(pos){
     let y = pos.y > (image.height - 200) ? image.height - 220 : pos.y + 5;
     let x = pos.x > (image.width - 200) ? image.width - 220 : pos.x + 5;
@@ -88,10 +92,10 @@ function showDropDown(pos){
     dropDown.style.display = 'block';
 }
 
+// on selecting a character from dropdown, it is checked against database
 function checkPosition(e){
     dropDown.style.display = 'none';
     let name = e.target.className;
-    // console.log(name);
 
     getDoc(doc(db, currentBoard, name))
     .then(docSnap => {
@@ -105,15 +109,14 @@ function checkPosition(e){
 function checkPoints(posFromDb, posClicked, name){
     if ((posClicked.x > posFromDb.x-30) && (posClicked.x < posFromDb.x+30)
     && (posClicked.y > posFromDb.y-30) && (posClicked.y < posFromDb.y+30)){
-            // console.log(true);
             found.push(name);
             success();
     }else{
-        // console.log(false);
         failure();
     }
 }
 
+// inform user that he/she found a character
 function success(){
     let name = found[found.length - 1]
     document.querySelector(`img[alt=${name}]`).style.borderColor = 'green';
@@ -132,6 +135,7 @@ function success(){
      }
 }
 
+// inform user that he/she selected wrong position or character
 function failure(){
     msgDiv.querySelector('h1').textContent = 'Incorrect!';
     msgDiv.style.display = 'block';
@@ -141,6 +145,7 @@ function failure(){
     },1000);
 }
 
+// return true if user has found all characters in the current board
 function gameOver(){
     return ((currentBoard === 'board3' && found.length === 3) || (currentBoard !== 'board3' && found.length === 4));
 }
@@ -160,11 +165,13 @@ function saveUser(e){
     }).catch(e => console.log(e.message));
 }
 
+// show all boards to user to select one
 function selectBoard(){
     hideAll();
     gameBoards.style.display = 'grid';
 }
 
+// show high scores to user
 function showScores(){
     hideAll();
     scores.style.display = 'block';
@@ -191,11 +198,14 @@ function showScores(){
     })
 }
 
+// show index page
 function showHome(){
     hideAll();
     resetControls();
     home.style.display = 'block';
 }
+
+// -----------start work flow ------------
 
 boards.forEach(board => board.addEventListener('click', changeGameBoard));
 image.addEventListener('click', handleClick);
@@ -208,7 +218,7 @@ homeButtons[1].addEventListener('click', selectBoard);
 homeButtons[2].addEventListener('click', showScores);
 
 form.addEventListener('submit', saveUser);
-formBtn[1].addEventListener('click',showHome);
+formBtn[1].addEventListener('click', showHome);
 
 hideAll();
 showHome();
