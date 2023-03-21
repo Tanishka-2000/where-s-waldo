@@ -21,6 +21,7 @@ const boardHeading = home.querySelector('.board-heading');
 
 const navBoardHeading = document.querySelector('.current-board');
 const navHomeBtn = document.querySelector('.homeBtn');
+const navLogo = document.querySelector('nav .logo');
 const images = document.querySelectorAll('nav img');
 
 const game = document.querySelector('.game');
@@ -212,6 +213,7 @@ image.addEventListener('click', handleClick);
 dropDownDivs.forEach(div => div.addEventListener('click', checkPosition));
 
 navHomeBtn.addEventListener('click', showHome);
+navLogo.addEventListener('click', showHome);
 
 homeButtons[0].addEventListener('click', startGame);
 homeButtons[1].addEventListener('click', selectBoard);

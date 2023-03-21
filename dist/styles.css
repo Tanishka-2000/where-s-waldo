@@ -13,14 +13,17 @@ nav{
     justify-content: space-between;
     align-items: center;
 }
-nav>div{
+nav > div{
     display: flex;
     gap:50px;
     align-items: center;
 }
-.material-symbols-outlined{
+
+.logo,
+.homeBtn{
     cursor: pointer;
 }
+
 nav img{
     width: 40px;
     height: 40px;
@@ -55,27 +58,25 @@ nav img{
     color: #C7D36F;
 }
 
-/* game levels */
+/* -----------game levels ----------*/
+
 .game-boards{
-    padding: 100px 50px;
+    padding: 15px 20px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-rows: 400px;
     grid-gap: 20px;
 }
 
 .game-boards>div{
-    width: 600px;
-    height: 400px;
     text-align: center;
     border: 1px solid #aaa;
     background-size: 100%;
     font-size: 2rem;
 }
 
-
 .game-boards>div:hover{
     opacity: .7;
-    background-color: #000;
 }
 
 .board1{
@@ -96,7 +97,8 @@ nav img{
 .board6{
     background-image: url('./images/board6.jpg');
 }
-/* high scores */
+
+/* -------high scores ----------*/
 
 .scores>h1{
     font-size: 2.5rem;
@@ -110,7 +112,8 @@ nav img{
     grid-template-columns: 1fr 1fr;
 }
 
-/* game */
+/* ---------game -----------*/
+
 .game{
     position: relative;
 }
@@ -152,7 +155,8 @@ nav img{
     background-color: rgba(0,0,0,.8);
     color: white;
 }
-/* form */
+
+/*------- form ----------*/
 
 form{
     width: 700px;
@@ -194,4 +198,4 @@ form .btn-group button{
     justify-content: center;
     align-items: center;
     display: none;
-}
+}   
